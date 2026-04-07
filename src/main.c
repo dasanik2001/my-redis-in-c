@@ -90,7 +90,8 @@ int main() {
 		exit(0);
 	}
 
-	while (wait(NULL) == -1);
+	while (wait(NULL) == -1)
+	;
 	close(server_fd);
 
 	return 0;

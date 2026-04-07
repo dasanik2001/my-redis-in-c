@@ -68,7 +68,7 @@ int main() {
 	while(read(client_fd, buff, BUF_SIZE) > 0)
 	{
 		// Until Read is not null keep on writing to FD
-		write(client_fd, response,  strlen(response));
+		send(client_fd, response,  strlen(response));
 	}
 	// printf("%d", strlen(response));
 	// if (send(client_fd, response, strlen(response), 0) == -1) {

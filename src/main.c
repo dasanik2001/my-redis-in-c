@@ -66,21 +66,30 @@ int main() {
 	}
 	printf("Client connected\n");
 
-	const char *response = "+PONG\r\n";
-    char buff[BUF_SIZE];
-	while(recv(client_fd, buff, BUF_SIZE,0) > 0)
-	{
-		// Until Read is not null keep on writing to FD
-		// write(client_fd, response,  strlen(response));
-		send(client_fd, response,  strlen(response),0);
-		// Both ways works
+	pid_t pid = fork()
+	assert(pid != -1); //Fork Failed
+	if(pid == 0){
+		// Child process to handle client connections
+		const char *response = "+PONG\r\n";
+		char buff[BUF_SIZE];
+		while(read(client_fd, buff, BUF_SIZE) > 0)
+		// Can use recv(client_fd, buff, BUF_SIZE,0) as well
+		{
+			// Until Read is not null keep on writing to FD
+			// write(client_fd, response,  strlen(response));
+			send(client_fd, response,  strlen(response),0);
+			// Both ways works
+		}
+		// printf("%d", strlen(response));
+		// if (send(client_fd, response, strlen(response), 0) == -1) {
+		// 	// If not able to send
+		// 	printf("Send failed: %s \n", strerror(errno));
+		// }
+		close(client_fd);
+		exit(0);
 	}
-	// printf("%d", strlen(response));
-	// if (send(client_fd, response, strlen(response), 0) == -1) {
-	// 	// If not able to send
-	// 	printf("Send failed: %s \n", strerror(errno));
-	// }
-	close(client_fd);
+
+	while (wait(NULL) == -1);
 	close(server_fd);
 
 	return 0;

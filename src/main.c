@@ -57,8 +57,9 @@ int main() {
 	client_addr_len = sizeof(client_addr);
 	
 
-while(1){
-
+while(1)
+{
+	// Keep on accepting connections
 	int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, &client_addr_len);
 	// Check if accept is successfull
 	if (client_fd == -1)
@@ -92,10 +93,7 @@ while(1){
 		close(client_fd);
 		exit(0);
 	}
-
 }
-
 	close(server_fd);
-
 	return 0;
 }

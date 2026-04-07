@@ -56,6 +56,9 @@ int main() {
 	printf("Waiting for a client to connect...\n");
 	client_addr_len = sizeof(client_addr);
 	
+
+while(1){
+
 	int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, &client_addr_len);
 	// Check if accept is successfull
 	if (client_fd == -1)
@@ -90,8 +93,8 @@ int main() {
 		exit(0);
 	}
 
-	while (wait(NULL) == -1)
-	;
+}
+
 	close(server_fd);
 
 	return 0;

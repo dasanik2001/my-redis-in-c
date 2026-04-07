@@ -64,7 +64,7 @@ int main() {
 	printf("Client connected\n");
 
 	const char *response = "+PONG\r\n";
-    char buff[BUF_SIZE]
+    char buff[BUF_SIZE];
 	while(read(client_fd, buff, BUF_SIZE) > 0)
 	{
 		// Until Read is not null keep on writing to FD

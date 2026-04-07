@@ -6,7 +6,7 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-
+#define BUF_SIZE 1024
 int main() {
 	// Disable output buffering
 	setbuf(stdout, NULL);
@@ -64,12 +64,18 @@ int main() {
 	printf("Client connected\n");
 
 	const char *response = "+PONG\r\n";
-	printf("%d", strlen(response));
-	if (send(client_fd, response, strlen(response), 0) == -1) {
-		// If not able to send
-		printf("Send failed: %s \n", strerror(errno));
+    char buff[BUF_SIZE]
+	while(read(client_fd, buff, BUF_SIZE) > 0)
+	{
+		// Until Read is not null keep on writing to FD
+		write(client_fd, response,  strnlen(response), BUF_SIZE);
 	}
-	
+	// printf("%d", strlen(response));
+	// if (send(client_fd, response, strlen(response), 0) == -1) {
+	// 	// If not able to send
+	// 	printf("Send failed: %s \n", strerror(errno));
+	// }
+	close(client_fd)
 	close(server_fd);
 
 	return 0;

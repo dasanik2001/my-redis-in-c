@@ -75,7 +75,7 @@ int main() {
 	// 	// If not able to send
 	// 	printf("Send failed: %s \n", strerror(errno));
 	// }
-	close(client_fd)
+	close(client_fd);
 	close(server_fd);
 
 	return 0;

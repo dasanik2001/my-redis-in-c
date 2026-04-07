@@ -66,7 +66,7 @@ int main() {
 	}
 	printf("Client connected\n");
 
-	pid_t pid = fork()
+	pid_t pid = fork();
 	assert(pid != -1); //Fork Failed
 	if(pid == 0){
 		// Child process to handle client connections

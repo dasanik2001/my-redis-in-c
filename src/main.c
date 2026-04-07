@@ -68,7 +68,7 @@ int main() {
 
 	const char *response = "+PONG\r\n";
     char buff[BUF_SIZE];
-	while(recv(client_fd, buff, BUF_SIZE) > 0)
+	while(recv(client_fd, buff, BUF_SIZE,0) > 0)
 	{
 		// Until Read is not null keep on writing to FD
 		// write(client_fd, response,  strlen(response));

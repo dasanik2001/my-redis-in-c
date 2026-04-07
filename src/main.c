@@ -1,9 +1,12 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <errno.h>
 #include <unistd.h>
 #define BUF_SIZE 1024
@@ -65,7 +68,7 @@ int main() {
 
 	const char *response = "+PONG\r\n";
     char buff[BUF_SIZE];
-	while(read(client_fd, buff, BUF_SIZE) > 0)
+	while(recv(client_fd, buff, BUF_SIZE) > 0)
 	{
 		// Until Read is not null keep on writing to FD
 		// write(client_fd, response,  strlen(response));

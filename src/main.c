@@ -69,6 +69,7 @@ int main() {
 	pid_t pid = fork();
 	assert(pid != -1); //Fork Failed
 	if(pid == 0){
+		close(server_fd);
 		// Child process to handle client connections
 		const char *response = "+PONG\r\n";
 		char buff[BUF_SIZE];

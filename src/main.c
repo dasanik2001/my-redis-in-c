@@ -12,6 +12,9 @@
 #include <unistd.h>
 #define BUF_SIZE 1024
 
+
+// Function to parse RESP commands and generate appropriate responses
+// example: *2\r\n$4\r\nECHO\r\n$5\r\napple\r\n
 char *resp_parser(char *buff)
 {
 	char *bulk_response;

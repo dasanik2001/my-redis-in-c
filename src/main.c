@@ -14,7 +14,8 @@
 
 char *resp_parser(char *buff)
 {
-	char bulk_response[BUF_SIZE];
+	char *bulk_response;
+	bulk_response = malloc(BUF_SIZE);
 	if (buff[0] != '*')
 		return NULL; // Empty check -> if NULL continue
 	char *ptr = buff;
@@ -52,8 +53,7 @@ char *resp_parser(char *buff)
 
 	if (strcmp(command, "PING") == 0)
 	{
-		response = "+PONG\r\n";
-		response_len = strlen(response);
+		return "+PONG\r\n";
 	}
 	else if (strcmp(command, "ECHO") == 0)
 	{
@@ -70,9 +70,10 @@ char *resp_parser(char *buff)
 		memcpy(bulk_response + offset, ptr, echo_length);
 		offset += echo_length;
 		strcpy(bulk_response + offset, "\r\n");
+		return bulk_response;
 	}
 
-	return bulk_response;
+	return NULL;
 }
 
 int main()

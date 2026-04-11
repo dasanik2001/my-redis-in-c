@@ -77,9 +77,12 @@ while(1)
 		// Child process to handle client connections
 		const char *response = "+PONG\r\n";
 		char buff[BUF_SIZE];
-		while(read(client_fd, buff, BUF_SIZE) > 0)
+		int bytes_read;
+		while((bytes_read = read(client_fd, buff, BUF_SIZE)) > 0)
 		// Can use recv(client_fd, buff, BUF_SIZE,0) as well
-		{
+		{	
+			buff[bytes_read] = '\0';
+			printf("Received: %s\n", buff);
 			// Until Read is not null keep on writing to FD
 			// write(client_fd, response,  strlen(response));
 			send(client_fd, response,  strlen(response),0);

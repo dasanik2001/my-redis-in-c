@@ -53,7 +53,7 @@ void set(struct server_data *sd, char *key, char *value)
 	sd->numOfElements++;
 	// print_server_data(sd);
 }
-char *get(struct server_data *sd, char *key)
+char get(struct server_data *sd, char *key)
 {
 	for (int i = 0; i < sd->numOfElements; i++)
 	{

@@ -53,7 +53,7 @@ char *get(struct server_data *sd, char *key)
 }
 // Function to parse RESP commands and generate appropriate responses
 // example: *2\r\n$4\r\nECHO\r\n$5\r\napple\r\n
-char *resp_parser(char *buff)
+char *resp_parser(char *buff, struct server_data *sd)
 {
 	char *bulk_response;
 	bulk_response = malloc(BUF_SIZE);
@@ -115,7 +115,6 @@ char *resp_parser(char *buff)
 	}
 	else if (strcmp(command, "SET") == 0)
 	{
-		struct server_data *sd = malloc(sizeof(struct server_data));
 
 		// Parse key
 		if (*ptr != '$')
@@ -149,7 +148,7 @@ char *resp_parser(char *buff)
 	}
 	else if (strcmp(command, "GET") == 0)
 	{
-		struct server_data *sd = malloc(sizeof(struct server_data));
+
 		// Parse key
 		if (*ptr != '$')
 			return NULL;
@@ -257,7 +256,8 @@ int main()
 			// Can use recv(client_fd, buff, BUF_SIZE,0) as well
 			{
 				buff[bytes_read] = '\0';
-				char *buff_response = resp_parser(buff);
+				struct server_data sd = {NULL, 0};
+				char *buff_response = resp_parser(buff, &sd);
 				if (buff_response == NULL)
 					continue;
 				else

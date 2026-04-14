@@ -163,7 +163,7 @@ char *resp_parser(char *buff)
 		strncpy(key, ptr, key_length);
 		key[key_length] = '\0';
 
-		char *value = get(sd);
+		char *value = get(sd, key);
 		if (strcmp(value, "Key not found!") == 0)
 		{
 			return "$-1\r\n"; // RESP null bulk string for missing key

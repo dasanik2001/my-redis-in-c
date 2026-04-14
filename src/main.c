@@ -11,8 +11,46 @@
 #include <errno.h>
 #include <unistd.h>
 #define BUF_SIZE 1024
+#define MAX_MAP_SIZE 100
+struct entry
+{
+	char *key;
+	char *value;
+};
+struct server_data
+{
+	struct entry *entries;
+	int numOfElements;
+};
+void set(struct server_data *sd, char *key, char *value)
+{
+	// Update value if key already exists
+	for (int i = 0; i < sd->numOfElements; i++)
+	{
+		if (strcmp(sd->entries[i].key, key) == 0)
+		{
+			sd->entries[i].value = value;
+			return;
+		}
+	}
 
-
+	// Grow the entries array by 1 and append new entry
+	sd->entries = realloc(sd->entries, sizeof(struct entry) * (sd->numOfElements + 1));
+	sd->entries[sd->numOfElements].key = key;
+	sd->entries[sd->numOfElements].value = value;
+	sd->numOfElements++;
+}
+char *get(struct server_data *sd, char *key)
+{
+	for (int i = 0; i < sd->numOfElements; i++)
+	{
+		if (strcmp(sd->entries[i].key, key) == 0)
+		{
+			return sd->entries[i].value;
+		}
+	}
+	return "Key not found!";
+}
 // Function to parse RESP commands and generate appropriate responses
 // example: *2\r\n$4\r\nECHO\r\n$5\r\napple\r\n
 char *resp_parser(char *buff)
@@ -72,6 +110,65 @@ char *resp_parser(char *buff)
 		int offset = sprintf(bulk_response, "$%d\r\n", echo_length);
 		memcpy(bulk_response + offset, ptr, echo_length);
 		offset += echo_length;
+		strcpy(bulk_response + offset, "\r\n");
+		return bulk_response;
+	}
+	else if (strcmp(command, "SET") == 0)
+	{
+		// Parse key
+		if (*ptr != '$')
+			return NULL;
+		int key_length = atoi(ptr + 1);
+		ptr = strchr(ptr, '\r');
+		if (!ptr)
+			return NULL;
+		ptr += 2;
+
+		char *key = malloc(key_length + 1);
+		strncpy(key, ptr, key_length);
+		key[key_length] = '\0';
+		ptr += key_length + 2; // skip \r\n
+
+		// Parse value
+		if (*ptr != '$')
+			return NULL;
+		int value_length = atoi(ptr + 1);
+		ptr = strchr(ptr, '\r');
+		if (!ptr)
+			return NULL;
+		ptr += 2;
+
+		char *value = malloc(value_length + 1);
+		strncpy(value, ptr, value_length);
+		value[value_length] = '\0';
+
+		set(mp, key, value);
+		return "+OK\r\n";
+	}
+	else if (strcmp(command, "GET") == 0)
+	{
+		// Parse key
+		if (*ptr != '$')
+			return NULL;
+		int key_length = atoi(ptr + 1);
+		ptr = strchr(ptr, '\r');
+		if (!ptr)
+			return NULL;
+		ptr += 2;
+
+		char key[64];
+		strncpy(key, ptr, key_length);
+		key[key_length] = '\0';
+
+		char *value = get(mp, key);
+		if (strcmp(value, "Key not found!") == 0)
+		{
+			return "$-1\r\n"; // RESP null bulk string for missing key
+		}
+
+		int offset = sprintf(bulk_response, "$%d\r\n", (int)strlen(value));
+		memcpy(bulk_response + offset, value, strlen(value));
+		offset += strlen(value);
 		strcpy(bulk_response + offset, "\r\n");
 		return bulk_response;
 	}

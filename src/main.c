@@ -164,6 +164,7 @@ char *resp_parser(char *buff)
 		key[key_length] = '\0';
 
 		char *value = get(sd, key);
+		printf("Value for key '%s': %s\n", key, value);
 		if (strcmp(value, "Key not found!") == 0)
 		{
 			return "$-1\r\n"; // RESP null bulk string for missing key

@@ -273,7 +273,9 @@ int main()
 			// Can use recv(client_fd, buff, BUF_SIZE,0) as well
 			{
 				buff[bytes_read] = '\0';
-				struct server_data sd = {NULL, 0};
+				struct server_data *sd = malloc(sizeof(struct server_data));
+				sd->entries = NULL;
+				sd->numOfElements = 0;
 				char *buff_response = resp_parser(buff, &sd);
 				if (buff_response == NULL)
 					continue;

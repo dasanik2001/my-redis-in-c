@@ -115,6 +115,8 @@ char *resp_parser(char *buff)
 	}
 	else if (strcmp(command, "SET") == 0)
 	{
+		struct server_data *sd = malloc(sizeof(struct server_data));
+
 		// Parse key
 		if (*ptr != '$')
 			return NULL;
@@ -142,11 +144,12 @@ char *resp_parser(char *buff)
 		strncpy(value, ptr, value_length);
 		value[value_length] = '\0';
 
-		set(mp, key, value);
+		set(sd, key, value);
 		return "+OK\r\n";
 	}
 	else if (strcmp(command, "GET") == 0)
 	{
+		struct server_data *sd = malloc(sizeof(struct server_data));
 		// Parse key
 		if (*ptr != '$')
 			return NULL;
@@ -160,7 +163,7 @@ char *resp_parser(char *buff)
 		strncpy(key, ptr, key_length);
 		key[key_length] = '\0';
 
-		char *value = get(mp, key);
+		char *value = get(sd);
 		if (strcmp(value, "Key not found!") == 0)
 		{
 			return "$-1\r\n"; // RESP null bulk string for missing key

@@ -276,7 +276,7 @@ int main()
 				struct server_data *sd = malloc(sizeof(struct server_data));
 				sd->entries = NULL;
 				sd->numOfElements = 0;
-				char *buff_response = resp_parser(buff, &sd);
+				char *buff_response = resp_parser(buff, sd);
 				if (buff_response == NULL)
 					continue;
 				else

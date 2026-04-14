@@ -41,7 +41,6 @@ void set(struct server_data *sd, char *key, char *value)
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
 			sd->entries[i].value = value;
-			// print_server_data(sd);
 			return;
 		}
 	}
@@ -51,15 +50,14 @@ void set(struct server_data *sd, char *key, char *value)
 	sd->entries[sd->numOfElements].key = key;
 	sd->entries[sd->numOfElements].value = value;
 	sd->numOfElements++;
-	// print_server_data(sd);
 }
 char *get(struct server_data *sd, char *key)
 {
-	print_server_data(sd);
-	printf("Getting value for key in '%d' elements\n", sd->numOfElements);
+	// print_server_data(sd);
+	// printf("Getting value for key in '%d' elements\n", sd->numOfElements);
 	for (int i = 0; i < sd->numOfElements; i++)
 	{
-		printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);
+		// printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);
 
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
@@ -180,7 +178,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 		key[key_length] = '\0';
 
 		char *value = get(sd, key);
-		printf("Value for key '%s': %s\n", key, value);
+		// printf("Value for key '%s': %s\n", key, value);
 		if (strcmp(value, "Key not found!") == 0)
 		{
 			return "$-1\r\n"; // RESP null bulk string for missing key

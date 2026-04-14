@@ -22,14 +22,26 @@ struct server_data
 	struct entry *entries;
 	int numOfElements;
 };
+
+void print_server_data(struct server_data *sd)
+{
+	printf("Current server_data entries (%d):\n", sd->numOfElements);
+	for (int i = 0; i < sd->numOfElements; i++)
+	{
+		printf("  [%d] key='%s' value='%s'\n", i, sd->entries[i].key, sd->entries[i].value);
+	}
+}
+
 void set(struct server_data *sd, char *key, char *value)
-{	printf("Setting key '%s' with value '%s'\n", key, value);
+{
+	printf("Setting key '%s' with value '%s'\n", key, value);
 	// Update value if key already exists
 	for (int i = 0; i < sd->numOfElements; i++)
 	{
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
 			sd->entries[i].value = value;
+			// print_server_data(sd);
 			return;
 		}
 	}
@@ -39,6 +51,7 @@ void set(struct server_data *sd, char *key, char *value)
 	sd->entries[sd->numOfElements].key = key;
 	sd->entries[sd->numOfElements].value = value;
 	sd->numOfElements++;
+	print_server_data(sd);
 }
 char *get(struct server_data *sd, char *key)
 {

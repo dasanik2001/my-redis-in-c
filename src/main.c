@@ -53,8 +53,9 @@ void set(struct server_data *sd, char *key, char *value)
 	sd->numOfElements++;
 	// print_server_data(sd);
 }
-char get(struct server_data *sd, char *key)
+char *get(struct server_data *sd, char *key)
 {
+	printf("Getting value for key in '%d' elements\n", sd->numOfElements);
 	for (int i = 0; i < sd->numOfElements; i++)
 	{
 		printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);

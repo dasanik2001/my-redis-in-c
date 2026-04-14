@@ -51,7 +51,7 @@ void set(struct server_data *sd, char *key, char *value)
 	sd->entries[sd->numOfElements].key = key;
 	sd->entries[sd->numOfElements].value = value;
 	sd->numOfElements++;
-	print_server_data(sd);
+	// print_server_data(sd);
 }
 char *get(struct server_data *sd, char *key)
 {

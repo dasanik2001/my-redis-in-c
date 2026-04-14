@@ -58,10 +58,9 @@ char *get(struct server_data *sd, char *key)
 	for (int i = 0; i < sd->numOfElements; i++)
 	{
 		// printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);
-
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
-			printf("Key '%s' found with value '%s'\n", key, sd->entries[i].value);
+			// printf("Key '%s' found with value '%s'\n", key, sd->entries[i].value);
 			return sd->entries[i].value;
 		}
 	}
@@ -131,7 +130,6 @@ char *resp_parser(char *buff, struct server_data *sd)
 	}
 	else if (strcmp(command, "SET") == 0)
 	{
-
 		// Parse key
 		if (*ptr != '$')
 			return NULL;
@@ -163,7 +161,6 @@ char *resp_parser(char *buff, struct server_data *sd)
 	}
 	else if (strcmp(command, "GET") == 0)
 	{
-
 		// Parse key
 		if (*ptr != '$')
 			return NULL;

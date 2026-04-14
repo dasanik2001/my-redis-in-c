@@ -23,7 +23,7 @@ struct server_data
 	int numOfElements;
 };
 void set(struct server_data *sd, char *key, char *value)
-{
+{	printf("Setting key '%s' with value '%s'\n", key, value);
 	// Update value if key already exists
 	for (int i = 0; i < sd->numOfElements; i++)
 	{
@@ -142,7 +142,6 @@ char *resp_parser(char *buff, struct server_data *sd)
 		char *value = malloc(value_length + 1);
 		strncpy(value, ptr, value_length);
 		value[value_length] = '\0';
-		printf("Setting key '%s' with value '%s'\n", key, value);
 		set(sd, key, value);
 		return "+OK\r\n";
 	}

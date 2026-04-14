@@ -267,17 +267,14 @@ int main()
 		{
 			close(server_fd);
 			// Child process to handle client connections
+			struct server_data sd = {NULL, 0};
 			char buff[BUF_SIZE];
-			struct server_data *sd = malloc(sizeof(struct server_data));
-			sd->entries = NULL;
-			sd->numOfElements = 0;
 			int bytes_read;
 			while ((bytes_read = read(client_fd, buff, BUF_SIZE)) > 0)
 			// Can use recv(client_fd, buff, BUF_SIZE,0) as well
 			{
 				buff[bytes_read] = '\0';
-
-				char *buff_response = resp_parser(buff, sd);
+				char *buff_response = resp_parser(buff, &sd);
 				if (buff_response == NULL)
 					continue;
 				else

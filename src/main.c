@@ -59,6 +59,7 @@ char *get(struct server_data *sd, char *key)
 	{
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
+			printf("Key '%s' found with value '%s'\n", key, sd->entries[i].value);
 			return sd->entries[i].value;
 		}
 	}

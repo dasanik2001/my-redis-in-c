@@ -71,12 +71,12 @@ char *get(struct server_data *sd, char *key)
 		// printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
-			long long curr_time = current_time_ms();
+			// long long curr_time = current_time_ms();
 
-			printf("Current time: %lld\n", curr_time);
-			printf("Entry TTL: %lld\n", sd->entries[i].ttl);
+			// printf("Current time: %lld\n", curr_time);
+			// printf("Entry TTL: %lld\n", sd->entries[i].ttl);
 
-			if (sd->entries[i].ttl != 0 && curr_time > sd->entries[i].ttl)
+			if (current_time_ms() > sd->entries[i].ttl)
 			{
 				// Entry expired
 				return NULL;

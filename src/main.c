@@ -209,7 +209,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 			strncpy(ttl_val, ptr, ttl_len);
 			ttl_val[ttl_len] = '\0';
 			ptr += ttl_len + 2;
-
+			printf("Parsed TTL type: %s, TTL value: %s\n", ttl_type, ttl_val);
 			ttl_value = atoi(ttl_val);
 		}
 		printf("ttl_value before conversion: %lld\n", ttl_value);

@@ -179,7 +179,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 
 		// Default TTL
 
-		time_t ttl_value = -1;
+		long long ttl_value = 0;
 
 		// Check if more arguments exist (EX / PX etc.)
 		if (*ptr == '$')

@@ -182,6 +182,8 @@ char *resp_parser(char *buff, struct server_data *sd)
 		long long ttl_value = 0;
 
 		// Check if more arguments exist (EX / PX etc.)
+		// print ptr value for debugging
+		printf("Remaining string after value parsing: '%s'\n", ptr);
 		if (*ptr == '$')
 		{
 			printf("Additional arguments detected for SET command\n");

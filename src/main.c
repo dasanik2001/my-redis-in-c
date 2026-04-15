@@ -38,10 +38,8 @@ void print_server_data(struct server_data *sd)
 		printf("  [%d] key='%s' value='%s' ttl=%ld\n", i, sd->entries[i].key, sd->entries[i].value, (long)sd->entries[i].ttl);
 	}
 }
-
 void set(struct server_data *sd, char *key, char *value, long long ttl)
 {
-	// printf("Setting key '%s' with value '%s' and TTL %ld\n", key, value, (long)ttl);
 	// Update value if key already exists
 	for (int i = 0; i < sd->numOfElements; i++)
 	{
@@ -59,7 +57,7 @@ void set(struct server_data *sd, char *key, char *value, long long ttl)
 	sd->entries[sd->numOfElements].value = value;
 	sd->entries[sd->numOfElements].ttl = ttl > 0 ? get_current_time_ms() + ttl : 0; // Set absolute expiration time
 	sd->numOfElements++;
-	print_server_data(sd);
+	// print_server_data(sd);
 }
 char *get(struct server_data *sd, char *key)
 {
@@ -71,7 +69,6 @@ char *get(struct server_data *sd, char *key)
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
 			long long curr_time = get_current_time_ms();
-
 			if (sd->entries[i].ttl != 0 && curr_time > sd->entries[i].ttl)
 			{
 				// Entry has expired
@@ -183,11 +180,9 @@ char *resp_parser(char *buff, struct server_data *sd)
 		long long ttl_value = 0;
 
 		// Check if more arguments exist (EX / PX etc.)
-		// print ptr value for debugging
-		printf("Remaining string after value parsing: '%s'\n", ptr);
 		if (*ptr == '$')
 		{
-			printf("Additional arguments detected for SET command\n");
+			// printf("Additional arguments detected for SET command\n");
 			// Parse TTL type (EX / PX)
 			int type_len = atoi(ptr + 1);
 			ptr = strchr(ptr, '\r');
@@ -213,12 +208,8 @@ char *resp_parser(char *buff, struct server_data *sd)
 			strncpy(ttl_val, ptr, ttl_len);
 			ttl_val[ttl_len] = '\0';
 			ptr += ttl_len + 2;
-			printf("Parsed TTL type: %s, TTL value: %s\n", ttl_type, ttl_val);
 			ttl_value = atoi(ttl_val);
 		}
-		// printf("ttl_value before conversion: %lld\n", ttl_value);
-		// ttl_value += get_current_time_ms();
-		// printf("ttl_value after conversion: %lld\n", ttl_value);
 		set(sd, key, value, ttl_value);
 		return "+OK\r\n";
 	}
@@ -238,7 +229,6 @@ char *resp_parser(char *buff, struct server_data *sd)
 		key[key_length] = '\0';
 
 		char *value = get(sd, key);
-		printf("Value for key '%s': %s\n", key, value);
 		if (value == NULL)
 		{
 			return "$-1\r\n"; // RESP null bulk string for missing key

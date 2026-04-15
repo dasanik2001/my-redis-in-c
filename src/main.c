@@ -212,7 +212,9 @@ char *resp_parser(char *buff, struct server_data *sd)
 
 			ttl_value = atoi(ttl_val);
 		}
+		printf("ttl_value before conversion: %lld\n", ttl_value);
 		ttl_value += get_current_time_ms();
+		printf("ttl_value after conversion: %lld\n", ttl_value);
 		set(sd, key, value, ttl_value);
 		return "+OK\r\n";
 	}

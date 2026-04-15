@@ -17,7 +17,7 @@ struct entry
 {
 	char *key;
 	char *value;
-	time_t ttl;
+	long long ttl;
 };
 struct server_data
 {
@@ -34,7 +34,7 @@ void print_server_data(struct server_data *sd)
 	}
 }
 
-void set(struct server_data *sd, char *key, char *value, time_t ttl)
+void set(struct server_data *sd, char *key, char *value, long long ttl)
 {
 	// printf("Setting key '%s' with value '%s' and TTL %ld\n", key, value, (long)ttl);
 	// Update value if key already exists
@@ -65,15 +65,18 @@ char *get(struct server_data *sd, char *key)
 		// printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
-			// printf("Key '%s' found with value '%s'\n", key, sd->entries[i].value);
-			time_t curr_time = time(NULL) * 1000;
+			long long curr_time = (long long)time(NULL) * 1000;
+
 			if (curr_time > sd->entries[i].ttl)
 			{
 				// Entry has expired
-				return sd->entries[i].value;
+				return NULL;
 			}
 			else
-				return NULL; // Entry is valid
+			{
+				// Entry is still valid
+				return sd->entries[i].value;
+			}
 		}
 	}
 	return NULL;

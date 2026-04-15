@@ -24,6 +24,12 @@ struct server_data
 	struct entry *entries;
 	int numOfElements;
 };
+long long current_time_ms()
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
 void print_server_data(struct server_data *sd)
 {
 	printf("Current server_data entries (%d):\n", sd->numOfElements);
@@ -42,7 +48,7 @@ void set(struct server_data *sd, char *key, char *value, time_t ttl)
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
 			sd->entries[i].value = value;
-			sd->entries[i].ttl = time(NULL) * 1000 + ttl;
+			sd->entries[i].ttl = ttl;
 			return;
 		}
 	}
@@ -51,7 +57,7 @@ void set(struct server_data *sd, char *key, char *value, time_t ttl)
 	sd->entries = realloc(sd->entries, sizeof(struct entry) * (sd->numOfElements + 1));
 	sd->entries[sd->numOfElements].key = key;
 	sd->entries[sd->numOfElements].value = value;
-	sd->entries[sd->numOfElements].ttl = time(NULL) * 1000 + ttl;
+	sd->entries[sd->numOfElements].ttl = ttl;
 	sd->numOfElements++;
 	print_server_data(sd);
 }
@@ -64,16 +70,17 @@ char *get(struct server_data *sd, char *key)
 		// printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
-			// printf("Current time: %ld, Entry TTL: %ld\n", (long)time(NULL) * 1000, (long)sd->entries[i].ttl);
-			if (sd->entries[i].ttl != 0 && time(NULL) * 1000 >= sd->entries[i].ttl)
+			// printf("Key '%s' found with value '%s'\n", key, sd->entries[i].value);
+			// time_t curr_time = time(NULL) * 1000;
+			// printf("Current time: %ld\n", (long)curr_time);
+			// printf("Entry TTL: %ld\n", (long)sd->entries[i].ttl);
+			if (time(NULL) * 1000 > sd->entries[i].ttl)
 			{
-				// Entry expired
+				// Entry has expired
+
 				return NULL;
 			}
-			else
-			{
-				return sd->entries[i].value;
-			}
+			return sd->entries[i].value;
 		}
 	}
 	return NULL;
@@ -204,7 +211,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 
 			ttl_value = atoi(ttl_val);
 		}
-		// ttl_value += time(NULL) * 1000;
+		ttl_value += time(NULL) * 1000;
 		set(sd, key, value, ttl_value);
 		return "+OK\r\n";
 	}

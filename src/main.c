@@ -67,7 +67,7 @@ char *get(struct server_data *sd, char *key)
 		{
 			long long curr_time = (long long)time(NULL) * 1000;
 
-			if (curr_time > sd->entries[i].ttl)
+			if (curr_time >= sd->entries[i].ttl)
 			{
 				// Entry has expired
 				return NULL;

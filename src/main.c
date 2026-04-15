@@ -42,7 +42,7 @@ void set(struct server_data *sd, char *key, char *value, time_t ttl)
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
 			sd->entries[i].value = value;
-			sd->entries[i].ttl = ttl;
+			sd->entries[i].ttl = time(NULL) * 1000 + ttl;
 			return;
 		}
 	}
@@ -51,7 +51,7 @@ void set(struct server_data *sd, char *key, char *value, time_t ttl)
 	sd->entries = realloc(sd->entries, sizeof(struct entry) * (sd->numOfElements + 1));
 	sd->entries[sd->numOfElements].key = key;
 	sd->entries[sd->numOfElements].value = value;
-	sd->entries[sd->numOfElements].ttl = ttl;
+	sd->entries[sd->numOfElements].ttl = time(NULL) * 1000 + ttl;
 	sd->numOfElements++;
 	print_server_data(sd);
 }
@@ -204,7 +204,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 
 			ttl_value = atoi(ttl_val);
 		}
-		ttl_value += time(NULL) * 1000;
+		// ttl_value += time(NULL) * 1000;
 		set(sd, key, value, ttl_value);
 		return "+OK\r\n";
 	}

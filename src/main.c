@@ -16,6 +16,7 @@ struct entry
 {
 	char *key;
 	char *value;
+	time_t ttl;
 };
 struct server_data
 {
@@ -32,7 +33,7 @@ void print_server_data(struct server_data *sd)
 	}
 }
 
-void set(struct server_data *sd, char *key, char *value)
+void set(struct server_data *sd, char *key, char *value, time_t ttl)
 {
 	printf("Setting key '%s' with value '%s'\n", key, value);
 	// Update value if key already exists
@@ -41,6 +42,7 @@ void set(struct server_data *sd, char *key, char *value)
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
 			sd->entries[i].value = value;
+			sd->entries[i].ttl = ttl;
 			return;
 		}
 	}
@@ -49,11 +51,12 @@ void set(struct server_data *sd, char *key, char *value)
 	sd->entries = realloc(sd->entries, sizeof(struct entry) * (sd->numOfElements + 1));
 	sd->entries[sd->numOfElements].key = key;
 	sd->entries[sd->numOfElements].value = value;
+	sd->entries[sd->numOfElements].ttl = ttl;
 	sd->numOfElements++;
 }
 char *get(struct server_data *sd, char *key)
 {
-	// print_server_data(sd);
+	print_server_data(sd);
 	// printf("Getting value for key in '%d' elements\n", sd->numOfElements);
 	for (int i = 0; i < sd->numOfElements; i++)
 	{
@@ -156,7 +159,44 @@ char *resp_parser(char *buff, struct server_data *sd)
 		char *value = malloc(value_length + 1);
 		strncpy(value, ptr, value_length);
 		value[value_length] = '\0';
-		set(sd, key, value);
+
+		// Default TTL
+
+		time_t ttl_value = -1;
+
+		// Check if more arguments exist (EX / PX etc.)
+		if (*ptr == '$')
+		{
+			// Parse TTL type (EX / PX)
+			int type_len = atoi(ptr + 1);
+			ptr = strchr(ptr, '\r');
+			if (!ptr)
+				return NULL;
+			ptr += 2;
+			char *ttl_type = malloc(type_len + 1);
+			strncpy(ttl_type, ptr, type_len);
+			ttl_type[type_len] = '\0';
+			ptr += type_len + 2;
+
+			// Parse TTL value
+			if (*ptr != '$')
+				return NULL;
+
+			int ttl_len = atoi(ptr + 1);
+			ptr = strchr(ptr, '\r');
+			if (!ptr)
+				return NULL;
+			ptr += 2;
+
+			char *ttl_val = malloc(ttl_len + 1);
+			strncpy(ttl_val, ptr, ttl_len);
+			ttl_val[ttl_len] = '\0';
+			ptr += ttl_len + 2;
+
+			ttl_value = atoi(ttl_val);
+		}
+		ttl_value += time(NULL) * 1000;
+		set(sd, key, value, ttl_value);
 		return "+OK\r\n";
 	}
 	else if (strcmp(command, "GET") == 0)

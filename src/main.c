@@ -64,7 +64,7 @@ char *get(struct server_data *sd, char *key)
 		// printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
-			printf("Current time: %ld, Entry TTL: %ld\n", (long)time(NULL) * 1000, (long)sd->entries[i].ttl);
+			// printf("Current time: %ld, Entry TTL: %ld\n", (long)time(NULL) * 1000, (long)sd->entries[i].ttl);
 			if (sd->entries[i].ttl != 0 && time(NULL) * 1000 >= sd->entries[i].ttl)
 			{
 				// Entry expired

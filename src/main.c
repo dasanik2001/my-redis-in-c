@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <unistd.h>
+#include <time.h>
 #define BUF_SIZE 1024
 #define MAX_MAP_SIZE 100
 struct entry

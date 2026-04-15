@@ -184,6 +184,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 		// Check if more arguments exist (EX / PX etc.)
 		if (*ptr == '$')
 		{
+			printf("Additional arguments detected for SET command\n");
 			// Parse TTL type (EX / PX)
 			int type_len = atoi(ptr + 1);
 			ptr = strchr(ptr, '\r');

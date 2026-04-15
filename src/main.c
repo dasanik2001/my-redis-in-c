@@ -24,7 +24,12 @@ struct server_data
 	struct entry *entries;
 	int numOfElements;
 };
-
+long long current_time_ms()
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
 void print_server_data(struct server_data *sd)
 {
 	printf("Current server_data entries (%d):\n", sd->numOfElements);
@@ -65,14 +70,14 @@ char *get(struct server_data *sd, char *key)
 		// printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
-			// printf("Key '%s' found with value '%s'\n", key, sd->entries[i].value);
-			// time_t curr_time = time(NULL) * 1000;
-			// printf("Current time: %ld\n", (long)curr_time);
-			// printf("Entry TTL: %ld\n", (long)sd->entries[i].ttl);
-			if (time(NULL) * 1000 > sd->entries[i].ttl)
-			{
-				// Entry has expired
+			long long curr_time = current_time_ms();
 
+			printf("Current time: %lld\n", curr_time);
+			printf("Entry TTL: %lld\n", sd->entries[i].ttl);
+
+			if (sd->entries[i].ttl != 0 && curr_time > sd->entries[i].ttl)
+			{
+				// Entry expired
 				return NULL;
 			}
 			return sd->entries[i].value;

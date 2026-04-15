@@ -176,6 +176,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 		char *value = malloc(value_length + 1);
 		strncpy(value, ptr, value_length);
 		value[value_length] = '\0';
+		ptr += value_length + 2; // skip \r\n
 
 		// Default TTL
 

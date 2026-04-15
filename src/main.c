@@ -224,7 +224,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 		key[key_length] = '\0';
 
 		char *value = get(sd, key);
-		// printf("Value for key '%s': %s\n", key, value);
+		printf("Value for key '%s': %s\n", key, value);
 		if (value == NULL)
 		{
 			return "$-1\r\n"; // RESP null bulk string for missing key

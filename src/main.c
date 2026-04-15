@@ -70,7 +70,7 @@ char *get(struct server_data *sd, char *key)
 			if (curr_time < sd->entries[i].ttl)
 			{
 				// Entry has expired
-				printf("Key '%s' has expired \n", key);
+				printf("Current time %ld is greater than TTL %ld for key '%s'. Entry has expired.\n", (long)curr_time, (long)sd->entries[i].ttl, key);
 				return NULL;
 			}
 			return sd->entries[i].value;

@@ -69,7 +69,7 @@ char *get(struct server_data *sd, char *key)
 			time_t curr_time = time(NULL) * 1000;
 			printf("Current time: %ld\n", (long)curr_time);
 			printf("Entry TTL: %ld\n", (long)sd->entries[i].ttl);
-			if (curr_time < sd->entries[i].ttl)
+			if (curr_time > sd->entries[i].ttl)
 			{
 				// Entry has expired
 

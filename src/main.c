@@ -67,11 +67,12 @@ char *get(struct server_data *sd, char *key)
 		{
 			// printf("Key '%s' found with value '%s'\n", key, sd->entries[i].value);
 			time_t curr_time = time(NULL) * 1000;
-			if (sd->entries[i].ttl != -1 && curr_time > sd->entries[i].ttl)
+			if (curr_time < sd->entries[i].ttl)
 			{
 				// Entry has expired
-				return sd->entries[i].value;
+				return NULL;
 			}
+			return sd->entries[i].value;
 		}
 	}
 	return NULL;

@@ -70,9 +70,8 @@ char *get(struct server_data *sd, char *key)
 			if (sd->entries[i].ttl != -1 && curr_time > sd->entries[i].ttl)
 			{
 				// Entry has expired
-				return NULL;
+				return sd->entries[i].value;
 			}
-			return sd->entries[i].value;
 		}
 	}
 	return NULL;

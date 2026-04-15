@@ -30,13 +30,13 @@ void print_server_data(struct server_data *sd)
 	printf("Current server_data entries (%d):\n", sd->numOfElements);
 	for (int i = 0; i < sd->numOfElements; i++)
 	{
-		printf("  [%d] key='%s' value='%s'\n", i, sd->entries[i].key, sd->entries[i].value);
+		printf("  [%d] key='%s' value='%s' ttl=%ld\n", i, sd->entries[i].key, sd->entries[i].value, (long)sd->entries[i].ttl);
 	}
 }
 
 void set(struct server_data *sd, char *key, char *value, time_t ttl)
 {
-	printf("Setting key '%s' with value '%s' and TTL %ld\n", key, value, (long)ttl);
+	// printf("Setting key '%s' with value '%s' and TTL %ld\n", key, value, (long)ttl);
 	// Update value if key already exists
 	for (int i = 0; i < sd->numOfElements; i++)
 	{

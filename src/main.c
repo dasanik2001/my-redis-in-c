@@ -24,7 +24,7 @@ struct server_data
 	struct entry *entries;
 	int numOfElements;
 };
-long long current_time_ms()
+long long get_current_time_ms()
 {
 	struct timeval tv;
 	gettimeofday(&tv, NULL);

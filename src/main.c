@@ -69,7 +69,10 @@ char *get(struct server_data *sd, char *key)
 				// Entry expired
 				return NULL;
 			}
-			return sd->entries[i].value;
+			else
+			{
+				return sd->entries[i].value;
+			}
 		}
 	}
 	return NULL;

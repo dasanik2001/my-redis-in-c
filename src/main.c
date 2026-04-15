@@ -10,7 +10,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <unistd.h>
-#include <time.h>
+#include <sys/time.h>
 #define BUF_SIZE 1024
 #define MAX_MAP_SIZE 100
 struct entry
@@ -24,7 +24,12 @@ struct server_data
 	struct entry *entries;
 	int numOfElements;
 };
-
+long long current_time_ms()
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
 void print_server_data(struct server_data *sd)
 {
 	printf("Current server_data entries (%d):\n", sd->numOfElements);
@@ -65,9 +70,9 @@ char *get(struct server_data *sd, char *key)
 		// printf("[%d] key: '%s' value: '%s'\n", i, sd->entries[i].key, sd->entries[i].value);
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
-			long long curr_time = (long long)time(NULL) * 1000;
+			long long curr_time = get_current_time_ms();
 
-			if (curr_time >= sd->entries[i].ttl)
+			if (curr_time > sd->entries[i].ttl)
 			{
 				// Entry has expired
 				return NULL;
@@ -207,7 +212,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 
 			ttl_value = atoi(ttl_val);
 		}
-		ttl_value += time(NULL) * 1000;
+		ttl_value += get_current_time_ms();
 		set(sd, key, value, ttl_value);
 		return "+OK\r\n";
 	}

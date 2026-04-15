@@ -66,10 +66,16 @@ char *get(struct server_data *sd, char *key)
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
 			// printf("Key '%s' found with value '%s'\n", key, sd->entries[i].value);
+			time_t curr_time = time(NULL) * 1000;
+			if (sd->entries[i].ttl != -1 && curr_time > sd->entries[i].ttl)
+			{
+				// Entry has expired
+				return NULL;
+			}
 			return sd->entries[i].value;
 		}
 	}
-	return "Key not found!";
+	return NULL;
 }
 // Function to parse RESP commands and generate appropriate responses
 // example: *2\r\n$4\r\nECHO\r\n$5\r\napple\r\n
@@ -218,7 +224,7 @@ char *resp_parser(char *buff, struct server_data *sd)
 
 		char *value = get(sd, key);
 		// printf("Value for key '%s': %s\n", key, value);
-		if (strcmp(value, "Key not found!") == 0)
+		if (value == NULL)
 		{
 			return "$-1\r\n"; // RESP null bulk string for missing key
 		}

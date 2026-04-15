@@ -73,8 +73,8 @@ char *get(struct server_data *sd, char *key)
 		{
 			// long long curr_time = current_time_ms();
 
-			// printf("Current time: %lld\n", curr_time);
-			// printf("Entry TTL: %lld\n", sd->entries[i].ttl);
+			printf("Current time: %lld\n", current_time_ms());
+			printf("Entry TTL: %lld\n", sd->entries[i].ttl);
 
 			if (current_time_ms() > sd->entries[i].ttl)
 			{

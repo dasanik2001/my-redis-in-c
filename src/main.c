@@ -54,10 +54,11 @@ void set(struct server_data *sd, char *key, char *value, time_t ttl)
 	sd->entries[sd->numOfElements].value = value;
 	sd->entries[sd->numOfElements].ttl = ttl;
 	sd->numOfElements++;
+	print_server_data(sd);
 }
 char *get(struct server_data *sd, char *key)
 {
-	print_server_data(sd);
+
 	// printf("Getting value for key in '%d' elements\n", sd->numOfElements);
 	for (int i = 0; i < sd->numOfElements; i++)
 	{

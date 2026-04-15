@@ -48,7 +48,7 @@ void set(struct server_data *sd, char *key, char *value, long long ttl)
 		if (strcmp(sd->entries[i].key, key) == 0)
 		{
 			sd->entries[i].value = value;
-			sd->entries[i].ttl = ttl;
+			sd->entries[i].ttl = ttl > 0 ? get_current_time_ms() + ttl : 0; // Set absolute expiration time
 			return;
 		}
 	}
@@ -57,7 +57,7 @@ void set(struct server_data *sd, char *key, char *value, long long ttl)
 	sd->entries = realloc(sd->entries, sizeof(struct entry) * (sd->numOfElements + 1));
 	sd->entries[sd->numOfElements].key = key;
 	sd->entries[sd->numOfElements].value = value;
-	sd->entries[sd->numOfElements].ttl = ttl;
+	sd->entries[sd->numOfElements].ttl = ttl > 0 ? get_current_time_ms() + ttl : 0; // Set absolute expiration time
 	sd->numOfElements++;
 	print_server_data(sd);
 }
@@ -72,7 +72,7 @@ char *get(struct server_data *sd, char *key)
 		{
 			long long curr_time = get_current_time_ms();
 
-			if (curr_time > sd->entries[i].ttl)
+			if (sd->entries[i].ttl != 0 && curr_time > sd->entries[i].ttl)
 			{
 				// Entry has expired
 				return NULL;
@@ -216,9 +216,9 @@ char *resp_parser(char *buff, struct server_data *sd)
 			printf("Parsed TTL type: %s, TTL value: %s\n", ttl_type, ttl_val);
 			ttl_value = atoi(ttl_val);
 		}
-		printf("ttl_value before conversion: %lld\n", ttl_value);
-		ttl_value += get_current_time_ms();
-		printf("ttl_value after conversion: %lld\n", ttl_value);
+		// printf("ttl_value before conversion: %lld\n", ttl_value);
+		// ttl_value += get_current_time_ms();
+		// printf("ttl_value after conversion: %lld\n", ttl_value);
 		set(sd, key, value, ttl_value);
 		return "+OK\r\n";
 	}
